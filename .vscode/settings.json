@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "history.h": "c",
+        "typeinfo": "c",
+        "types.h": "c"
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build myshell.c with gdb",
+            "type": "shell",
+            "command": "gcc myshell.c -O0 -g -o myshell.out -lreadline",
+            "args": [],
+            "group": "build",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            // "detail": "Run make to build the project"
+        }
+    ]
+}
