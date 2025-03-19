@@ -32,8 +32,8 @@ int main() {
     char *str, str2[200];
     while(1) {
         str = rl_gets();
-        strcpy(str2, str);
-back_flag:        
+back_flag: 
+        strcpy(str2, str);       
         if(str == NULL) break;
 
         char *str_end = str + strlen(str);
@@ -42,6 +42,11 @@ back_flag:
         if (cmd == NULL) { continue; }
 
         if (str[0] == '!') {
+            if(history_length == 1) {   //没有历史记录
+                printf("No such command in history\n");
+                clear_history();
+                continue;
+            }
             int index = 0;
             if(*(str + 1) == '!')
             {
@@ -75,7 +80,7 @@ back_flag:
         }
         if (i == (sizeof(cmd_table) / sizeof(cmd_table[i]))) 
         { 
-            printf(" '%s' Not in internal commands and will run in bash\n", str2);
+            printf(" '%s' Not in internal commands and will run in sub-process\n", str2);
             char *token = strtok(str2, " ");
             char *sub_args[200] = {NULL};
             int sub_args_index = 0;
@@ -100,7 +105,6 @@ back_flag:
             } else if (pid == 0) {
                 // 子进程执行命令
                 execvp(sub_args[0], sub_args);
-                printf("子进程结束\n");
                 return 1;
             } else {
                 if(is_parallel) {
@@ -111,6 +115,7 @@ back_flag:
                     printf("is waiting for sub-process\n");
                     int status;
                     waitpid(pid, &status, 0);  // 阻塞等待
+                    printf("sub-process finished\n");
                     // wait(NULL);
                     continue;
                 }
@@ -128,7 +133,9 @@ int cmd_q(char *argv) {
 
 int cmd_help(char *argv) 
 {
-    printf("internal commands:\n");
+    printf("This shell contains both internal and external instructions\n");
+    printf("External instructions will run in sub-process\n");
+    printf("Internal commands:\n");
     for(int i = 0; i < (sizeof(cmd_table) / sizeof(cmd_table[i])); i ++) {
         printf("%d %10s %s\n", i, cmd_table[i].name, cmd_table[i].description);
     }
@@ -140,7 +147,8 @@ int cmd_history(char *argv)
     HIST_ENTRY **history_entry = history_list();
     if (history_entry) {
         for (int i = 0; i < history_length; i++) {
-            printf("%ld %d: %s\n", history_get_time(history_entry[i]), i, history_entry[i]->line);
+            //printf("%ld %d: %s\n", history_get_time(history_entry[i]), i, history_entry[i]->line);
+            printf(" %d: %s\n", i, history_entry[i]->line);
         }
     } else {
         printf("No history available.\n");

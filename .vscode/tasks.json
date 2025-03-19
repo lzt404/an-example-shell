@@ -11,6 +11,14 @@
                 "$gcc"
             ],
             // "detail": "Run make to build the project"
+        },
+        {
+            "label": "run",
+            "type": "shell",
+            "command": "./myshell.out",
+            "args": [],
+            "group": "test",
+            // "detail": "Run make to build the project"
         }
     ]
 }
